@@ -1,17 +1,16 @@
 const express = require("express");
 const cors = require("cors");
 const corsConfig = require("./config/cors.config");
-const dbConfig = require("./config/db.config");
 
 const app = express();
-const db = require("./models");
+const database = require("./models");
 
-if(dbConfig.resync){
-  db.sequelize.sync({ force: true }).then(() => {
+if(database.dbConfig.resync){
+  database.sequelize.sync({ force: true }).then(() => {
     console.log("Drop and re-sync db.");
   });
 }else{
-  db.sequelize.sync().then(() => {
+  database.sequelize.sync().then(() => {
     console.log("Synced database models.");
   });
 }

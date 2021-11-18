@@ -14,11 +14,16 @@ const sequelize = new Sequelize(dbConfig.DB, dbConfig.USER, dbConfig.PASSWORD, {
   }
 });
 
-const db = {};
+const _db = {
+  dbConfig,
+  Sequelize,
+  sequelize,
+  customers: null
+};
 
-db.Sequelize = Sequelize;
-db.sequelize = sequelize;
+_db.dbConfig = dbConfig,
+_db.Sequelize = Sequelize;
+_db.sequelize = sequelize;
+_db.customers = require("./customer.model")(sequelize, Sequelize);
 
-db.customers = require("./customer.model")(sequelize, Sequelize);
-
-module.exports = db;
+module.exports = _db;
