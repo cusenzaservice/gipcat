@@ -9,3 +9,10 @@ WIP....
 ## Come installare
 
 WIP....
+
+## Variabili d'ambiente
+- HOST
+- USER
+- DB
+- PASSWORD
+- ORIGIN

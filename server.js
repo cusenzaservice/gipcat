@@ -1,12 +1,13 @@
 const express = require("express");
 const cors = require("cors");
+const corsConfig = require("./config/cors.config");
 
 const app = express();
 
+// load cors options from module
 var corsOptions = {
-  origin: "http://localhost:8081"
+  origin: corsConfig.origin
 };
-
 app.use(cors(corsOptions));
 
 // parse requests of content-type - application/json
@@ -17,7 +18,7 @@ app.use(express.urlencoded({ extended: true }));
 
 // simple route
 app.get("/", (req, res) => {
-  res.json({ message: "Welcome to bezkoder application." });
+  res.json({ message: corsConfig });
 });
 
 // set port, listen for requests
