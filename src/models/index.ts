@@ -15,7 +15,6 @@ const sequelize = new Sequelize(dbConfig.DB, dbConfig.USER, dbConfig.PASSWORD, {
 });
 
 const _db = {
-  dbConfig: dbConfig,
   Sequelize: Sequelize,
   sequelize: sequelize,
   customers: require("./customer.model")(sequelize, Sequelize),

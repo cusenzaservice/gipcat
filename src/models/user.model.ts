@@ -12,21 +12,28 @@ module.exports = (sequelize, Sequelize) => {
       },
       legalName: {
         type: Sequelize.STRING,
-        allowNull: false
       },
       legalSurname: {
         type: Sequelize.STRING,
-        allowNull: false
       },
       passwordHash: {
-        type: Sequelize.STRING,
+        type: Sequelize.STRING(60),
         allowNull: false
       },
+      /* 
+      ID | READABLE NAME
+      0  | Not authenticated, not valid for DB
+      1  | Customer
+      2  | Help Desk Operator
+      3  | Administrator
+      */
       permissionType: {
-        type: Sequelize.CHAR
+        type: Sequelize.INTEGER,
+        allowNull: false
       },
+      // only needed if 'permissionType' = 1
       idCustomer: {
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
       }
     });
   

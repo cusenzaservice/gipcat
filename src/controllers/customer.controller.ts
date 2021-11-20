@@ -1,3 +1,5 @@
+//TODO: Refactor and finish all of customer.controller.ts
+
 // Create and Save a new Customer
 exports.create = (req, res) => {
   // Validate request, checking for empty parameters
@@ -7,7 +9,7 @@ exports.create = (req, res) => {
       !req.body.registeredOfficeCity
     ) {
     res.status(400).send({
-      message: "Required values are missing. Check documentation."
+      message: "Required values are missing."
     });
     return;
   }

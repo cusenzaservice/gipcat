@@ -1,6 +1,7 @@
-const db = require("../models");
-const Op = db.Sequelize.Op;
+// framework and middleware
+const Op = database.Sequelize.Op;
+const userMiddleware = require("../middleware/user.middleware");
 
 // import db models
-const Customer = db.customers;
-const User = db.users;
+const Customer = database.customers;
+const User = database.users;

@@ -1,23 +1,17 @@
 const express = require("express");
 const cors = require("cors");
-const corsConfig = require("./config/cors.config");
+const config = require("./config/general.config");
 
 const app = express();
 const database = require("./models");
 
-if(database.dbConfig.resync){
-  database.sequelize.sync({ force: true }).then(() => {
-    console.log("Drop and re-sync db.");
-  });
-}else{
-  database.sequelize.sync().then(() => {
-    console.log("Synced database models.");
-  });
-}
+database.sequelize.sync().then(() => {
+  console.log("Synced database models.");
+});
 
 // load cors options from module
 var corsOptions = {
-  origin: corsConfig.origin
+  origin: config.origin
 };
 app.use(cors(corsOptions));
 
@@ -29,11 +23,13 @@ app.use(express.urlencoded({ extended: true }));
 
 // simple route
 app.get("/", (req, res) => {
-  res.json({ message: corsConfig });
+  res.json({ message: config });
 });
 
 //load routes
-require("./routes/tutorial.routes")(app);
+require("./routes/auth.routes")(app);
+require("./routes/user.routes")(app);
+require("./routes/customer.routes")(app);
 
 // set port, listen for requests
 const PORT = process.env.PORT || 8080;
