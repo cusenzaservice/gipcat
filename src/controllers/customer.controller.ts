@@ -1,7 +1,3 @@
-const db = require("../models");
-const Customer = db.customers;
-const Op = db.Sequelize.Op;
-
 // Create and Save a new Customer
 exports.create = (req, res) => {
   // Validate request, checking for empty parameters
@@ -58,10 +54,5 @@ exports.update = (req, res) => {
 
 // Delete a Customer with the specified id in the request
 exports.delete = (req, res) => {
-  
-};
-
-// Delete all Customers from the database.
-exports.deleteAll = (req, res) => {
   
 };
