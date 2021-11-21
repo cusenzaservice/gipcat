@@ -1,4 +1,15 @@
-const bcrypt = require('bcrypt');
+import bcrypt from 'bcrypt';
+import jwt from 'jsonwebtoken';
+// framework and middleware
+import database from '../models';
+import config from '../config/general.config';
+//import userMiddleware from '../middleware/user.middleware';
+
+// import db models
+const Customer = database.customers;
+const User = database.users;
+
+const Op = database.Sequelize.Op;
 
 // Create and save a new User
 // Needed permission level: 3 [Administrator]
@@ -33,7 +44,7 @@ exports.create = (req, res) => {
 
     if (
         req.body.permissionType < 1 ||
-        req.body.permissionType > 4
+        req.body.permissionType > 3
     ) {
         res.status(400).send({
             message: "Invalid user permission type."
@@ -42,12 +53,12 @@ exports.create = (req, res) => {
     }
 
     // permission type 1 is customer
-    if (req.body.permissionType == 1){
+    if (req.body.permissionType == 1) {
         // check if a customer has been bound
-        if(!req.body.idCustomer){
+        if (!req.body.idCustomer) {
             res.status(400).send({
                 message: "A customer permission level has been set, " +
-                "but no customer id has been bound!"
+                    "but no customer id has been bound!"
             });
             return;
         }
@@ -59,13 +70,13 @@ exports.create = (req, res) => {
     const user = {
         userName: req.body.userName,
         passwordHash: bcrypt.hashSync(
-            req.body.password, 
+            req.body.password,
             config.bcryptSaltRounds
         ),
         permissionType: req.body.permissionType,
         idCustomer: req.body.idCustomer ? req.body.idCustomer : null,
-        legalName: req.body.legalName ? req.body.legalName : null,
-        legalSurname: req.body.legalSurname ? req.body.legalSurname : null
+        legalName: req.body.legalName ? req.body.legalName : "",
+        legalSurname: req.body.legalSurname ? req.body.legalSurname : ""
     };
 
     // Save the customer in the database
@@ -108,11 +119,67 @@ exports.delete = (req, res) => {
 /// AUTHENTICATION ///
 
 // Check the login info and return the JWT
+// Needed permission level: 0 [Not authenticated]
 exports.login = (req, res) => {
-    //TODO: Implement User.login()
-};
+    // Validate request, checking for empty parameters
+    if (
+        !req.body.userName ||
+        !req.body.password
+    ) {
+        res.status(400).send({
+            message: "Required values are missing."
+        });
+        return;
+    }
 
-// Destroy the JWT
-exports.logout = (req, res) => {
-    //TODO: Implement User.logout()
+    // validate password length
+    if (
+        req.body.password.length < 7 ||
+        req.body.password.length > 71
+    ) {
+        res.status(401).send({
+            message: "Invalid password length."
+        });
+        return;
+    }
+
+    // Check if user exists
+    User.findByPk(req.body.userName)
+        .then(data => {
+            if (data) {
+                //res.send(data);
+                if (bcrypt.compareSync(req.body.password, data.passwordHash)) {
+
+                    let session = {
+                        idUser: data.idUser,
+                        userName: data.userName,
+                        legalName: data.legalName,
+                        legalSurname: data.legalSurname,
+                        permissionType: data.permissionType,
+                        idCustomer: data.idCustomer
+                    }
+
+                    let token = jwt.sign(
+                        session,
+                        config.jwtSecret,
+                        { expiresIn: config.sessionExpiry }
+                    )
+
+                    res.status(200).send({
+                        session: session,
+                        jwt: token
+                    });
+                } else {
+                    res.status(401).send({
+                        message: "Unknown user."
+                    });
+                    return;
+                }
+            } else {
+                res.status(401).send({
+                    message: "Unknown user."
+                });
+                return;
+            }
+        });
 };

@@ -1,9 +1,9 @@
-const express = require("express");
-const cors = require("cors");
-const config = require("./config/general.config");
+import cors from 'cors';
+import config from './config/general.config';
+import database from './models';
 
+const express = require("express");
 const app = express();
-const database = require("./models");
 
 database.sequelize.sync().then(() => {
   console.log("Synced database models.");

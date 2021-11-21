@@ -1,3 +1,10 @@
+// framework and middleware
+import database from '../models';
+// import db models
+const Customer = database.customers;
+
+const Op = database.Sequelize.Op;
+
 //TODO: Refactor and finish all of customer.controller.ts
 
 // Create and Save a new Customer

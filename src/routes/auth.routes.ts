@@ -3,6 +3,5 @@ module.exports = app => {
   
     var router = require("express").Router();
     router.post("/login", users.login);
-    router.get("/logout", users.logout);
     app.use('/api/auth', router);
   };
