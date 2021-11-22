@@ -13,7 +13,12 @@ const Op = database.Sequelize.Op;
 // Create and save a new User
 // Needed permission level: 3 [Administrator]
 exports.create = (req, res) => {
-    // TODO: Implement Authorization JWT check
+    if (req.session.permissionType < 3) {
+        res.status(403).send({
+            message: "JWT does not have the necessary permission level to do this."
+        });
+        return;
+    }
 
     // Validate request, checking for empty parameters
     if (
@@ -61,23 +66,6 @@ exports.create = (req, res) => {
             });
             return;
         }
-
-        let cf = false;
-
-        // chech if customer id actually exists in the database
-        Customer.findByPk(req.body.idCustomer)
-            .then(data => {
-                if (!data) {
-                    cf = true;
-                }
-            });
-
-        if(cf){
-            res.status(400).send({
-                message: "A customer id has been provided, " +
-                "but it does not exist in the database!"
-            });
-        }
     }
 
     // Create a Customer object
@@ -94,39 +82,80 @@ exports.create = (req, res) => {
     };
 
     // Save the customer in the database
-    User.create(user)
+    Customer.findByPk(req.body.idCustomer)
         .then(data => {
-            res.send(data);
-        })
-        .catch(err => {
-            res.status(500).send({
-                message:
-                    err.message || "Generic error while creating User."
-            });
+            // chech if customer id actually exists in the database, or it's not needed
+            // this is very ugly, but for the async nature of sequelize
+            // i must do it here
+            if (data || req.body.permissionType != 1) {
+                User.create(user)
+                    .then(data => {
+                        res.send(data);
+                    })
+                    .catch(err => {
+                        res.status(500).send({
+                            message:
+                                err.message || "Generic error while creating User."
+                        });
+                    });
+            } else {
+                res.status(400).send({
+                    message: "A customer id has been provided, " +
+                        "but it does not exist in the database!"
+                });
+            }
         });
 };
 
 // Retrieve all Users from the database.
 // Needed permission level: 2 [Help Desk Operator]
 exports.findAll = (req, res) => {
+    if (req.session.permissionLevel < 2) {
+        res.status(403).send({
+            message: "JWT does not have the necessary permission level to do this."
+        });
+        return;
+    }
+
     //TODO: Implement User.findAll()
 };
 
 // Find a single User with an id
 // Needed permission level: 2 [Help Desk Operator]
 exports.findOne = (req, res) => {
+    if (req.session.permissionLevel < 2) {
+        res.status(403).send({
+            message: "JWT does not have the necessary permission level to do this."
+        });
+        return;
+    }
+
     //TODO: Implement User.findOne()
 };
 
 // Update a User by the id in the request
 // Needed permission level: 3 [Administrator]
 exports.update = (req, res) => {
+    if (req.session.permissionLevel < 3) {
+        res.status(403).send({
+            message: "JWT does not have the necessary permission level to do this."
+        });
+        return;
+    }
+
     //TODO: Implement User.update()
 };
 
 // Delete a User with the specified id in the request
 // Needed permission level: 3 [Administrator]
 exports.delete = (req, res) => {
+    if (req.session.permissionLevel < 3) {
+        res.status(403).send({
+            message: "JWT does not have the necessary permission level to do this."
+        });
+        return;
+    }
+
     //TODO: Implement User.delete()
 };
 
@@ -198,8 +227,7 @@ exports.login = (req, res) => {
         });
 };
 
-// Check the JWT status and return user data
-// Needed permission level: 1 [Customer]{min}
+// Check the JWT status and return user session
 exports.check = (req, res) => {
     res.status(200).send(req.session);
 }
