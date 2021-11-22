@@ -1,12 +1,16 @@
 {
     "compilerOptions": {
-      "module": "commonjs",
-      "esModuleInterop": true,
-      "target": "es6",
-      "moduleResolution": "node",
-      "sourceMap": true,
-      "outDir": "dist",
-      "types":["node"]
+        "module": "commonjs",
+        "esModuleInterop": true,
+        "target": "es6",
+        "moduleResolution": "node",
+        "sourceMap": true,
+        "outDir": "dist",
+        "types": [
+            "node"
+        ]
     },
-    "lib": ["es6"]
-  }
+    "lib": [
+        "es6"
+    ]
+}
