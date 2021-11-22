@@ -3,7 +3,6 @@ import jwt from 'jsonwebtoken';
 // framework and middleware
 import database from '../models';
 import config from '../config/general.config';
-//import userMiddleware from '../middleware/user.middleware';
 
 // import db models
 const Customer = database.customers;
@@ -62,8 +61,23 @@ exports.create = (req, res) => {
             });
             return;
         }
+
+        let cf = false;
+
         // chech if customer id actually exists in the database
-        //TODO: Finish implementing customer checking logic.
+        Customer.findByPk(req.body.idCustomer)
+            .then(data => {
+                if (!data) {
+                    cf = true;
+                }
+            });
+
+        if(cf){
+            res.status(400).send({
+                message: "A customer id has been provided, " +
+                "but it does not exist in the database!"
+            });
+        }
     }
 
     // Create a Customer object
@@ -137,7 +151,7 @@ exports.login = (req, res) => {
         req.body.password.length < 7 ||
         req.body.password.length > 71
     ) {
-        res.status(401).send({
+        res.status(400).send({
             message: "Invalid password length."
         });
         return;
@@ -170,16 +184,22 @@ exports.login = (req, res) => {
                         jwt: token
                     });
                 } else {
-                    res.status(401).send({
+                    res.status(403).send({
                         message: "Unknown user."
                     });
                     return;
                 }
             } else {
-                res.status(401).send({
+                res.status(403).send({
                     message: "Unknown user."
                 });
                 return;
             }
         });
 };
+
+// Check the JWT status and return user data
+// Needed permission level: 1 [Customer]{min}
+exports.check = (req, res) => {
+    res.status(200).send(req.session);
+}

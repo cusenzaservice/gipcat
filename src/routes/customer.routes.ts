@@ -1,11 +1,12 @@
 module.exports = app => {
-    const customers = require("../controllers/customer.controller");
-  
-    var router = require("express").Router();
-    router.post("/", customers.create);
-    router.get("/", customers.findAll);
-    router.get("/:id", customers.findOne);
-    router.put("/:id", customers.update);
-    router.delete("/:id", customers.delete);
-    app.use('/api/customers', router);
-  };
+  const customers = require("../controllers/customer.controller");
+  const userMiddleware = require("../middleware/user.middleware");
+
+  var router = require("express").Router();
+  router.post("/", userMiddleware.verify, customers.create);
+  router.get("/", userMiddleware.verify, customers.findAll);
+  router.get("/:id", userMiddleware.verify, customers.findOne);
+  router.put("/:id", userMiddleware.verify, customers.update);
+  router.delete("/:id", userMiddleware.verify, customers.delete);
+  app.use('/api/customers', router);
+};

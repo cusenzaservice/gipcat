@@ -3,7 +3,8 @@ module.exports = (sequelize, Sequelize) => {
       userName: {
         type: Sequelize.STRING,
         allowNull: false,
-        primaryKey: true
+        primaryKey: true,
+        unique: true
       },
       legalName: {
         type: Sequelize.STRING,

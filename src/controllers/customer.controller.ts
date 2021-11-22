@@ -30,7 +30,7 @@ exports.create = (req, res) => {
     headquartersCity: req.body.headquartersCity ? req.body.headquartersCity : null,
     fiscalCode: req.body.fiscalCode ? req.body.fiscalCode : null,
     vatNumber: req.body.vatNumber ? req.body.vatNumber : null,
-    footNote: req.body.footNote ? req.body.footNote : null,
+    footNote: req.body.footNote ? req.body.footNote : null
   };
 
   // Save the customer in the database

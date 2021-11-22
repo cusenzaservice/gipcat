@@ -22,8 +22,8 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // simple route
-app.get("/", (req, res) => {
-  res.json({ message: config });
+app.get("/api", (req, res) => {
+  res.json({message: "Online!"});
 });
 
 //load routes
