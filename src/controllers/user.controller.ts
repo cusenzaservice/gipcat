@@ -120,7 +120,7 @@ exports.findAll = (req, res) => {
     //TODO: Implement User.findAll()
 };
 
-// Find a single User with an id
+// Find a single User with a userName
 // Needed permission level: 2 [Help Desk Operator]
 exports.findOne = (req, res) => {
     if (req.session.permissionLevel < 2) {
@@ -130,10 +130,28 @@ exports.findOne = (req, res) => {
         return;
     }
 
-    //TODO: Implement User.findOne()
+    const userName = req.params.userName;
+
+    User.findByPk(userName)
+        .then(data => {
+            if (data) {
+                // pop reserved values from array
+                delete data.passwordHash;
+                res.send(data);
+            } else {
+                res.status(404).send({
+                    message: `Cannot find User with userName=${userName}.`
+                });
+            }
+        })
+        .catch(err => {
+            res.status(500).send({
+                message: "Error retrieving Tutorial with id=" + userName
+            });
+        });
 };
 
-// Update a User by the id in the request
+// Update a User by the userName in the request
 // Needed permission level: 3 [Administrator]
 exports.update = (req, res) => {
     if (req.session.permissionLevel < 3) {
@@ -143,10 +161,41 @@ exports.update = (req, res) => {
         return;
     }
 
-    //TODO: Implement User.update()
+    if (
+        req.body.userName ||
+        req.body.createdAt ||
+        req.body.updatedAt
+    ) {
+        res.status(400).send({
+            message: "Illegal values present in request body."
+        });
+        return;
+    }
+
+    const userName = req.params.userName;
+
+    User.update(req.body, {
+        where: { userName: userName }
+    })
+        .then(num => {
+            if (num == 1) {
+                res.send({
+                    message: "User was updated successfully."
+                });
+            } else {
+                res.status(500).send({
+                    message: `Cannot update User with userName=${userName}. Maybe User was not found or request body is empty!`
+                });
+            }
+        })
+        .catch(err => {
+            res.status(500).send({
+                message: "Error updating User with userName=" + userName
+            });
+        });
 };
 
-// Delete a User with the specified id in the request
+// Delete a User with the specified userName in the request
 // Needed permission level: 3 [Administrator]
 exports.delete = (req, res) => {
     if (req.session.permissionLevel < 3) {
@@ -156,7 +205,27 @@ exports.delete = (req, res) => {
         return;
     }
 
-    //TODO: Implement User.delete()
+    const userName = req.params.userName;
+
+    User.destroy({
+        where: { userName: userName }
+    })
+        .then(num => {
+            if (num == 1) {
+                res.send({
+                    message: "User deleted successfully."
+                });
+            } else {
+                res.status(500).send({
+                    message: `Cannot delete User with userName=${userName}. Maybe User was not found!`
+                });
+            }
+        })
+        .catch(err => {
+            res.status(500).send({
+                message: "Could not delete User with userName=" + userName
+            });
+        });
 };
 
 /// AUTHENTICATION ///
