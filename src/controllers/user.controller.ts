@@ -11,7 +11,7 @@ const User = database.users;
 const Op = database.Sequelize.Op;
 
 // Create and save a new User
-// Needed permission level: 3 [Administrator]
+// Needed permission level: 3 [HelpDesk]
 exports.create = (req, res) => {
     if (req.session.permissionType < 3) {
         res.status(403).send({
@@ -108,9 +108,9 @@ exports.create = (req, res) => {
 };
 
 // Retrieve all Users from the database.
-// Needed permission level: 2 [Help Desk Operator]
+// Needed permission level: 3 [helpDesk]
 exports.findAll = (req, res) => {
-    if (req.session.permissionLevel < 2) {
+    if (req.session.permissionType < 2) {
         res.status(403).send({
             message: "JWT does not have the necessary permission level to do this."
         });
@@ -121,11 +121,16 @@ exports.findAll = (req, res) => {
 };
 
 // Find a single User with a userName
-// Needed permission level: 2 [Help Desk Operator]
+// Needed permission level: 1 [Customer]
 exports.findOne = (req, res) => {
-    if (req.session.permissionLevel < 2) {
+    console.log(req.params.userName != req.session.userName)
+
+    if (
+        req.session.permissionType < 2 &&
+        req.params.userName != req.session.userName
+    ) {
         res.status(403).send({
-            message: "JWT does not have the necessary permission level to do this."
+            message: "JWT does not have the necessary permission level to access this user."
         });
         return;
     }
@@ -152,9 +157,9 @@ exports.findOne = (req, res) => {
 };
 
 // Update a User by the userName in the request
-// Needed permission level: 3 [Administrator]
+// Needed permission level: 3 [HelpDesk]
 exports.update = (req, res) => {
-    if (req.session.permissionLevel < 3) {
+    if (req.session.permissionType < 3) {
         res.status(403).send({
             message: "JWT does not have the necessary permission level to do this."
         });
@@ -196,9 +201,9 @@ exports.update = (req, res) => {
 };
 
 // Delete a User with the specified userName in the request
-// Needed permission level: 3 [Administrator]
+// Needed permission level: 3 [HelpDesk]
 exports.delete = (req, res) => {
-    if (req.session.permissionLevel < 3) {
+    if (req.session.permissionType < 3) {
         res.status(403).send({
             message: "JWT does not have the necessary permission level to do this."
         });

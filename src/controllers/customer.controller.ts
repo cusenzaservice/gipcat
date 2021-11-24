@@ -6,9 +6,9 @@ const Customer = database.customers;
 const Op = database.Sequelize.Op;
 
 // Create and save a new Customer
-// Needed permission level: 2 [Help Desk Operator]
+// Needed permission level: 3 [HelpDesk]
 exports.create = (req, res) => {
-    if (req.session.permissionLevel < 2) {
+    if (req.session.permissionLevel < 3) {
         res.status(403).send({
             message: "JWT does not have the necessary permission level to do this."
         });
@@ -53,9 +53,9 @@ exports.create = (req, res) => {
 };
 
 // Retrieve all Customers from the database.
-// Needed permission level: 2 [Help Desk Operator]
+// Needed permission level: 3 [HelpDesk]
 exports.findAll = (req, res) => {
-    if (req.session.permissionLevel < 2) {
+    if (req.session.permissionLevel < 3) {
         res.status(403).send({
             message: "JWT does not have the necessary permission level to do this."
         });
@@ -73,9 +73,9 @@ exports.findOne = (req, res) => {
 };
 
 // Update a Customer by the id in the request
-// Needed permission level: 2 [Help Desk Operator]
+// Needed permission level: 3 [HelpDesk]
 exports.update = (req, res) => {
-    if (req.session.permissionLevel < 2) {
+    if (req.session.permissionLevel < 3) {
         res.status(403).send({
             message: "JWT does not have the necessary permission level to do this."
         });
@@ -85,9 +85,9 @@ exports.update = (req, res) => {
 };
 
 // Delete a Customer with the specified id in the request
-// Needed permission level: 2 [Help Desk Operator]
+// Needed permission level: 3 [HelpDesk]
 exports.delete = (req, res) => {
-    if (req.session.permissionLevel < 2) {
+    if (req.session.permissionLevel < 3) {
         res.status(403).send({
             message: "JWT does not have the necessary permission level to do this."
         });

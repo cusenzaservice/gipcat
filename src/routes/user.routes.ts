@@ -5,8 +5,8 @@ module.exports = app => {
     var router = require("express").Router();
     router.post("/", userMiddleware.verify, users.create);
     router.get("/", userMiddleware.verify, users.findAll);
-    router.get("/:id", userMiddleware.verify, users.findOne);
-    router.put("/:id", userMiddleware.verify, users.update);
-    router.delete("/:id", userMiddleware.verify, users.delete);
+    router.get("/:userName", userMiddleware.verify, users.findOne);
+    router.put("/:userName", userMiddleware.verify, users.update);
+    router.delete("/:userName", userMiddleware.verify, users.delete);
     app.use('/api/users', userMiddleware.verify, router);
 };
