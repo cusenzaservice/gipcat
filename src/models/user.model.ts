@@ -31,7 +31,17 @@ module.exports = (sequelize, Sequelize) => {
         idCustomer: {
             type: Sequelize.INTEGER,
         }
-    });
+    },
+        {
+            defaultScope: {
+                attributes: { exclude: ['passwordHash'] }
+            },
+            scopes: {
+                loginScope: {
+                    attributes: { }
+                }
+            }
+        });
 
     return User;
 };

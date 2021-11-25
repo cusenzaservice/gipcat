@@ -156,8 +156,6 @@ exports.findOne = (req, res) => {
     User.findByPk(userName)
         .then(data => {
             if (data) {
-                // pop reserved values from array
-                delete data.passwordHash;
                 res.send(data);
             } else {
                 res.status(404).send({
@@ -277,7 +275,7 @@ exports.login = (req, res) => {
     }
 
     // Check if user exists
-    User.findByPk(req.body.userName)
+    User.scope("loginScope").findByPk(req.body.userName)
         .then(data => {
             if (data) {
                 //res.send(data);
