@@ -3,6 +3,7 @@ import jwt from 'jsonwebtoken';
 // framework and middleware
 import database from '../models';
 import config from '../config/general.config';
+const paginationMiddleware = require("../middleware/pagination.middleware");
 
 // import db models
 const Customer = database.customers;
@@ -117,7 +118,22 @@ exports.findAll = (req, res) => {
         return;
     }
 
-    //TODO: Implement User.findAll()
+    const { page, size, query } = req.query;
+    var condition = query ? { userName: { [Op.like]: `%${query}%` } } : null;
+
+    const { limit, offset } = paginationMiddleware.getPagination(page, size);
+
+    User.findAndCountAll({ where: condition, limit, offset })
+        .then(data => {
+            const response = paginationMiddleware.getPagingData(data, page, limit);
+            res.send(response);
+        })
+        .catch(err => {
+            res.status(500).send({
+                message:
+                    err.message || "Some error occurred while retrieving Users."
+            });
+        });
 };
 
 // Find a single User with a userName

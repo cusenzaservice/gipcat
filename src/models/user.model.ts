@@ -20,8 +20,8 @@ module.exports = (sequelize, Sequelize) => {
         ID | READABLE NAME
         0  | Not authenticated, not valid for DB
         1  | Customer
-        2  | Help Desk Operator
-        3  | Administrator
+        2  | Technichan
+        3  | HelpDesk
         */
         permissionType: {
             type: Sequelize.INTEGER,
