@@ -48,3 +48,36 @@ jobs:
           push: true
           tags: vittodevit/gipcat:live
           labels: ${{ steps.meta.outputs.labels }}
+
+      - name: Set Variables
+        uses: allenevans/set-env@v2.0.0
+        with:
+          OVPN: ${{ secrets.OVPN }}
+
+      - name: Write VPN Files
+        run: |
+          mkdir ~/.ssh
+          echo "$OVPN" > .github/vpn.ovpn
+
+      - name: Install OpenVPN
+        run: |
+          sudo apt install apt-transport-https
+          sudo wget https://swupdate.openvpn.net/repos/openvpn-repo-pkg-key.pub
+          sudo apt-key add openvpn-repo-pkg-key.pub
+          sudo wget -O /etc/apt/sources.list.d/openvpn3.list https://swupdate.openvpn.net/community/openvpn3/repos/openvpn3-bionic.list
+          sudo apt update
+          sudo apt install openvpn3
+
+      - name: Start OpenVPN
+        run: openvpn3 session-start --config .github/vpn.ovpn
+      
+      - name: Execute remote update commands
+        uses: appleboy/ssh-action@master
+        with:
+          host: 10.8.0.1
+          username: centos
+          key: ${{ secrets.SSH_PPK }}
+          port: 22
+          script: |
+            cd /home/centos/gipcat-be
+            ls -al
