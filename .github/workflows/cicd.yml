@@ -5,9 +5,59 @@ on:
     branches: ['main']
 
 jobs:
-  push_to_registries:
-    name: Push Docker image to DockerHub and ghcr.io
+  tsbuild:
+    name: TypeScript Build
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [16.x]
+    steps:
+      - name: Check out the repo
+        uses: actions/checkout@v2
+
+      - name: Node.js
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+      - name: NodeJS CI & build
+        run: |
+          npm ci
+          npm run build
+
+  analyze:
+    name: Analyze
+    needs: tsbuild
+    runs-on: ubuntu-latest
+    permissions:
+      actions: read
+      contents: read
+      security-events: write
+
+    strategy:
+      fail-fast: false
+      matrix:
+        language: [ 'javascript' ]
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Initialize CodeQL
+      uses: github/codeql-action/init@v1
+      with:
+        languages: ${{ matrix.language }}
+
+    - name: Autobuild
+      uses: github/codeql-action/autobuild@v1
+
+    - name: Perform CodeQL Analysis
+      uses: github/codeql-action/analyze@v1
+
+
+  push_to_registries:
+    name: Push image to DockerHub & GHCR
+    runs-on: ubuntu-latest
+    needs: tsbuild
     permissions:
       packages: write
       contents: read
@@ -47,7 +97,7 @@ jobs:
 
   update_server_img:
     name: Production server deploy
-    needs: push_to_registries
+    needs: ['tsbuild', 'push_to_registries']
     runs-on: ubuntu-18.04
     steps:
       - name: Set Variables
@@ -71,18 +121,8 @@ jobs:
 
       - name: Start OpenVPN
         run: openvpn3 session-start --config ~/.ssh/vpn.ovpn
-
-      - name: Copy stack files
-        uses: appleboy/scp-action@master
-        with:
-          host: 10.8.0.10
-          username: centos
-          key: ${{ secrets.SSH_PPK }}
-          port: 22
-          source: "./docker-compose.yml"
-          target: "/home/centos/gipcat-be"
       
-      - name: Execute Docker commands
+      - name: Deploy stack
         uses: appleboy/ssh-action@master
         with:
           host: 10.8.0.10
@@ -91,5 +131,7 @@ jobs:
           port: 22
           script: |
             cd /home/centos/gipcat-be
+            rm docker-compose.yml
+            wget https://raw.githubusercontent.com/vittodevit/gipcat/main/docker-compose.yml
             docker-compose down
             docker-compose up -d  

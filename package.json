@@ -4,6 +4,7 @@
   "description": "Gestore installazioni e prenotazioni per centro assistenza termoidraulico. Parte backend REST.",
   "main": "dist/server.js",
   "scripts": {
+    "build": "tsc",
     "start": "tsc && node dist/server.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
