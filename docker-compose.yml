@@ -16,7 +16,7 @@ services:
       - 3306:3306
 
   backend:
-    image: vittodevit/gipcat
+    image: vittodevit/gipcat:live
     restart: always
     environment:
       - ORIGIN=https://gc.cusenzaservice.it
