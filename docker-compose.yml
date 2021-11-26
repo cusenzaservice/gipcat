@@ -23,5 +23,6 @@ services:
       - USER=gipcat
       - DB=gipcat
       - PASSWORD=gipcat
+      - HOST=database
     ports:
       - 8080:8080
