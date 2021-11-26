@@ -5,5 +5,5 @@ module.exports = app => {
     var router = require("express").Router();
     router.post("/login", users.login);
     router.post("/check", userMiddleware.verify, users.check)
-    app.use('/api/auth', router);
+    app.use('/auth', router);
 };

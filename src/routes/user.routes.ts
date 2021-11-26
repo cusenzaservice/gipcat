@@ -8,5 +8,5 @@ module.exports = app => {
     router.get("/:userName", userMiddleware.verify, users.findOne);
     router.put("/:userName", userMiddleware.verify, users.update);
     router.delete("/:userName", userMiddleware.verify, users.delete);
-    app.use('/api/users', userMiddleware.verify, router);
+    app.use('/users', userMiddleware.verify, router);
 };
