@@ -1,0 +1,27 @@
+version: '3.1'
+
+services:
+  database:
+    image: mariadb
+    restart: always
+    command: --transaction-isolation=READ-COMMITTED --binlog-format=ROW --skip-innodb-read-only-compresse --skip-innodb-read-only-compressed
+    volumes:
+      - ./db:/var/lib/mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_PASSWORD=gipcat
+      - MYSQL_DATABASE=gipcat
+      - MYSQL_USER=gipcat
+    ports:
+      - 3306:3306
+
+  backend:
+    image: vittodevit/gipcat
+    restart: always
+    environment:
+      - ORIGIN=https://gc.cusenzaservice.it
+      - USER=gipcat
+      - DB=gipcat
+      - PASSWORD=gipcat
+    ports:
+      - 8080:8080

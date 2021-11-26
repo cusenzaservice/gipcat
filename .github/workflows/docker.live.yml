@@ -1,9 +1,4 @@
-# This workflow uses actions that are not certified by GitHub.
-# They are provided by a third-party and are governed by
-# separate terms of service, privacy policy, and support
-# documentation.
-
-name: Publish Docker image [LIVE]
+name: CI/CD
 
 on:
   push:
@@ -51,7 +46,7 @@ jobs:
 
 
   update_server_img:
-    name: Trigger image refresh on prod server
+    name: Production server deploy
     needs: push_to_registries
     runs-on: ubuntu-18.04
     steps:
@@ -60,7 +55,7 @@ jobs:
         with:
           OVPN: ${{ secrets.OVPN }}
 
-      - name: Write VPN Files
+      - name: Write VPN & SSH Files
         run: |
           mkdir ~/.ssh
           echo "$OVPN" > ~/.ssh/vpn.ovpn
@@ -76,14 +71,25 @@ jobs:
 
       - name: Start OpenVPN
         run: openvpn3 session-start --config ~/.ssh/vpn.ovpn
+
+      - name: Copy stack files
+        uses: appleboy/scp-action@master
+        with:
+          host: 10.8.0.10
+          username: centos
+          key: ${{ secrets.SSH_PPK }}
+          port: 22
+          source: "./docker-compose.yml"
+          target: "/home/centos/gipcat-be"
       
-      - name: Execute remote update commands
+      - name: Execute Docker commands
         uses: appleboy/ssh-action@master
         with:
-          host: 10.8.0.1
+          host: 10.8.0.10
           username: centos
           key: ${{ secrets.SSH_PPK }}
           port: 22
           script: |
             cd /home/centos/gipcat-be
-            ls -al
+            docker-compose down
+            docker-compose up -d  
