@@ -133,5 +133,5 @@ jobs:
             cd /home/centos/gipcat-be
             rm docker-compose.yml
             wget --no-check-certificate --no-cache --no-cookie https://raw.githubusercontent.com/vittodevit/gipcat/main/docker-compose.yml
-            docker-compose down
+            docker pull vittodevit/gipcat:live
             docker-compose up -d  

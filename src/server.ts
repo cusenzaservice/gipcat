@@ -1,9 +1,13 @@
 import cors from 'cors';
+import { placeholder } from 'sequelize/types/lib/operators';
 import config from './config/general.config';
 import database from './models';
 
 const express = require("express");
 const app = express();
+
+var pjson = require('../package.json');
+console.log(pjson.version)
 
 database.sequelize.sync().then(() => {
     console.log("Synced database models.");
@@ -25,6 +29,7 @@ app.use(express.urlencoded({ extended: true }));
 app.get(config.apiBasePath + "/", (req, res) => {
     res.json(
         { 
+            version: pjson.version,
             apiBasePath: config.apiBasePath,
             origin: config.origin,
             defaultSessionExpiry: config.sessionExpiry
