@@ -22,8 +22,14 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // simple route
-app.get("/", (req, res) => {
-    res.json({ message: "Online!" });
+app.get(config.apiBasePath + "/", (req, res) => {
+    res.json(
+        { 
+            apiBasePath: config.apiBasePath,
+            origin: config.origin,
+            defaultSessionExpiry: config.sessionExpiry
+        }
+    );
 });
 
 //load routes

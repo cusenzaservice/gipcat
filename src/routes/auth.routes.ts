@@ -1,3 +1,5 @@
+import config from '../config/general.config'
+
 module.exports = app => {
     const users = require("../controllers/user.controller");
     const userMiddleware = require("../middleware/user.middleware");
@@ -5,5 +7,5 @@ module.exports = app => {
     var router = require("express").Router();
     router.post("/login", users.login);
     router.post("/check", userMiddleware.verify, users.check)
-    app.use('/auth', router);
+    app.use(config.apiBasePath + '/auth', router);
 };
