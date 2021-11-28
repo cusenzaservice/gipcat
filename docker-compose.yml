@@ -26,3 +26,9 @@ services:
       - HOST=database
     ports:
       - 8080:8080
+
+  frontend:
+    image: vittodevit/gipcat-fe:live
+    restart: always
+    ports:
+      - 3000:80
