@@ -1,3 +1,5 @@
+import config from '../config/general.config'
+
 module.exports = app => {
     const users = require("../controllers/user.controller");
     const userMiddleware = require("../middleware/user.middleware");
@@ -8,5 +10,5 @@ module.exports = app => {
     router.get("/:userName", userMiddleware.verify, users.findOne);
     router.put("/:userName", userMiddleware.verify, users.update);
     router.delete("/:userName", userMiddleware.verify, users.delete);
-    app.use('/users', userMiddleware.verify, router);
+    app.use(config.apiBasePath + '/users', userMiddleware.verify, router);
 };
