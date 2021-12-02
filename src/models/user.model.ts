@@ -7,10 +7,10 @@ module.exports = (sequelize, Sequelize) => {
             unique: true
         },
         legalName: {
-            type: Sequelize.STRING,
+            type: Sequelize.STRING
         },
         legalSurname: {
-            type: Sequelize.STRING,
+            type: Sequelize.STRING
         },
         passwordHash: {
             type: Sequelize.STRING(60),
@@ -18,7 +18,6 @@ module.exports = (sequelize, Sequelize) => {
         },
         /* 
         ID | READABLE NAME
-        0  | Not authenticated, not valid for DB
         1  | Customer
         2  | Technichan
         3  | HelpDesk
@@ -29,7 +28,15 @@ module.exports = (sequelize, Sequelize) => {
         },
         // only needed if 'permissionType' = 1
         idCustomer: {
+            type: Sequelize.INTEGER
+        },
+        lastEditedBy: {
+            type: Sequelize.STRING
+        },
+        version: {
             type: Sequelize.INTEGER,
+            allowNull: false,
+            
         }
     },
         {

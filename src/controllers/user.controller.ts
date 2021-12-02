@@ -79,7 +79,9 @@ exports.create = (req, res) => {
         permissionType: req.body.permissionType,
         idCustomer: req.body.idCustomer ? req.body.idCustomer : null,
         legalName: req.body.legalName ? req.body.legalName : "",
-        legalSurname: req.body.legalSurname ? req.body.legalSurname : ""
+        legalSurname: req.body.legalSurname ? req.body.legalSurname : "",
+        lastEditedBy: req.session.userName,
+        version: 1
     };
 
     // Save the customer in the database
@@ -165,7 +167,7 @@ exports.findOne = (req, res) => {
         })
         .catch(err => {
             res.status(500).send({
-                message: "Error retrieving Tutorial with id=" + userName
+                message: "Error retrieving User with id=" + userName
             });
         });
 };
@@ -183,7 +185,8 @@ exports.update = (req, res) => {
     if (
         req.body.userName ||
         req.body.createdAt ||
-        req.body.updatedAt
+        req.body.updatedAt ||
+        req.body.lastEditedBy
     ) {
         res.status(400).send({
             message: "Illegal values present in request body."
@@ -191,27 +194,65 @@ exports.update = (req, res) => {
         return;
     }
 
+    if (
+        !req.body.version
+    ) {
+        res.status(400).send({
+            message: "Invalid record version."
+        });
+        return;
+    }
+
     const userName = req.params.userName;
 
-    User.update(req.body, {
-        where: { userName: userName }
-    })
-        .then(num => {
-            if (num == 1) {
-                res.send({
-                    message: "User was updated successfully."
-                });
-            } else {
-                res.status(500).send({
-                    message: `Cannot update User with userName=${userName}. Maybe User was not found or request body is empty!`
+    // check if user exists in DB
+    User.findByPk(userName)
+    .then(data => {
+        if (data) {
+            // check if client-sent record version is the same as the server
+            if(req.body.version == data.version){
+                // increment record version
+                let buf = req.body;
+                buf.version = buf.version + 1;
+                // set latest edit username
+                buf.lastEditedBy = req.session.userName;
+                User.update(buf, {
+                    where: { userName: userName }
+                })
+                    .then(num => {
+                        if (num == 1) {
+                            res.send({
+                                message: "User was updated successfully."
+                            });
+                        } else {
+                            res.status(500).send({
+                                message: `Cannot update User with userName=${userName}. Maybe User was not found or request body is empty!`
+                            });
+                        }
+                    })
+                    .catch(err => {
+                        res.status(500).send({
+                            message: "Error updating User with userName=" + userName
+                        });
+                    });
+            }else{
+                res.status(400).send({
+                    message: "Your record version is older than the one present on the server."
                 });
             }
-        })
-        .catch(err => {
-            res.status(500).send({
-                message: "Error updating User with userName=" + userName
+        } else {
+            res.status(404).send({
+                message: `Cannot find User with userName=${userName}.`
             });
+        }
+    })
+    .catch(err => {
+        res.status(500).send({
+            message: "Error retrieving User with id=" + userName
         });
+    });
+
+    
 };
 
 // Delete a User with the specified userName in the request
