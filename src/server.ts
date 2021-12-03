@@ -28,11 +28,14 @@ app.use(express.urlencoded({ extended: true }));
 // simple route
 app.get(config.apiBasePath + "/", (req, res) => {
     res.json(
-        { 
+        {
+            gipcat:
+            { 
             version: pjson.version,
             apiBasePath: config.apiBasePath,
             origin: config.origin,
             defaultSessionExpiry: config.sessionExpiry
+            }
         }
     );
 });

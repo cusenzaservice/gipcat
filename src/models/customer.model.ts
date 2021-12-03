@@ -32,8 +32,37 @@ module.exports = (sequelize, Sequelize) => {
         },
         footNote: {
             type: Sequelize.TEXT
+        },
+        lastEditedBy: {
+            type: Sequelize.STRING
+        },
+        version: {
+            type: Sequelize.INTEGER,
+            allowNull: false,
+
         }
-    });
+    },
+        {
+            defaultScope: {
+                attributes: {}
+            },
+            scopes: {
+                reduced: {
+                    attributes: {
+                        exclude: [
+                            'idCustomer',
+                            'headquartersAddress',
+                            'headquartersCity',
+                            'fiscalCode',
+                            'vatNumber',
+                            'footNote',
+                            'lastEditedBy',
+                            'version'
+                        ]
+                    }
+                }
+            }
+        });
 
     return Customer;
 };

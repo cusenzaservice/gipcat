@@ -113,7 +113,7 @@ exports.create = (req, res) => {
 // Retrieve all Users from the database.
 // Needed permission level: 3 [helpDesk]
 exports.findAll = (req, res) => {
-    if (req.session.permissionType < 2) {
+    if (req.session.permissionType < 3) {
         res.status(403).send({
             message: "JWT does not have the necessary permission level to do this."
         });
@@ -144,7 +144,7 @@ exports.findOne = (req, res) => {
     console.log(req.params.userName != req.session.userName)
 
     if (
-        req.session.permissionType < 2 &&
+        req.session.permissionType < 3 &&
         req.params.userName != req.session.userName
     ) {
         res.status(403).send({
@@ -167,7 +167,7 @@ exports.findOne = (req, res) => {
         })
         .catch(err => {
             res.status(500).send({
-                message: "Error retrieving User with id=" + userName
+                message: "Error retrieving User with userName=" + userName
             });
         });
 };
@@ -248,7 +248,7 @@ exports.update = (req, res) => {
     })
     .catch(err => {
         res.status(500).send({
-            message: "Error retrieving User with id=" + userName
+            message: "Error retrieving User with userName=" + userName
         });
     });
 
