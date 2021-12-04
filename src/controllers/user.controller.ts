@@ -69,7 +69,7 @@ exports.create = (req, res) => {
         }
     }
 
-    // Create a Customer object
+    // Create a User object
     const user = {
         userName: req.body.userName,
         passwordHash: bcrypt.hashSync(
@@ -84,7 +84,7 @@ exports.create = (req, res) => {
         version: 1
     };
 
-    // Save the customer in the database
+    // Save the User in the database
     Customer.findByPk(req.body.idCustomer)
         .then(data => {
             // chech if customer id actually exists in the database, or it's not needed
@@ -141,7 +141,6 @@ exports.findAll = (req, res) => {
 // Find a single User with a userName
 // Needed permission level: 1 [Customer]
 exports.findOne = (req, res) => {
-    console.log(req.params.userName != req.session.userName)
 
     if (
         req.session.permissionType < 3 &&

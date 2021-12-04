@@ -86,9 +86,34 @@ exports.findAll = (req, res) => {
 // Find a single Customer with an id
 // Needed permission level: 1 [Customer]
 exports.findOne = (req, res) => {
+    const id = req.params.id;
     // the customer can read his profile data
-    //TODO: Implement Customer.findOne() security check
-    //TODO: Implement Customer.findOne()
+    if (
+        // if the customer tries reading another one
+        req.session.permissionType < 3 &&
+        id != req.session.idCustomer
+    ) {
+        res.status(403).send({
+            message: "JWT does not have the necessary permission level to access this Customer."
+        });
+        return;
+    }
+    
+    Customer.scope("extended").findByPk(id)
+        .then(data => {
+            if (data) {
+                res.send(data);
+            } else {
+                res.status(404).send({
+                    message: `Cannot find Customer with customerId=${id}.`
+                });
+            }
+        })
+        .catch(err => {
+            res.status(500).send({
+                message: "Error retrieving Customer with customerId=" + id
+            });
+        });
 };
 
 // Update a Customer by the id in the request

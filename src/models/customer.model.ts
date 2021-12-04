@@ -44,22 +44,22 @@ module.exports = (sequelize, Sequelize) => {
     },
         {
             defaultScope: {
-                attributes: {}
+                attributes: {
+                    exclude: [
+                        'idCustomer',
+                        'headquartersAddress',
+                        'headquartersCity',
+                        'fiscalCode',
+                        'vatNumber',
+                        'footNote',
+                        'lastEditedBy',
+                        'version'
+                    ]
+                }
             },
             scopes: {
-                reduced: {
-                    attributes: {
-                        exclude: [
-                            'idCustomer',
-                            'headquartersAddress',
-                            'headquartersCity',
-                            'fiscalCode',
-                            'vatNumber',
-                            'footNote',
-                            'lastEditedBy',
-                            'version'
-                        ]
-                    }
+                extended: {
+                    attributes: {}
                 }
             }
         });
