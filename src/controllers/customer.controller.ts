@@ -1,5 +1,6 @@
 // framework and middleware
 import database from '../models';
+import formalChecker, { checkFiscalCode } from '../middleware/formalChecker.middleware';
 const paginationMiddleware = require("../middleware/pagination.middleware");
 // import db models
 const Customer = database.customers;
@@ -28,6 +29,42 @@ exports.create = (req, res) => {
         return;
     }
 
+    if(req.body.fiscalCode){
+        if(!formalChecker.checkVatNumber(req.body.fiscalCode)){
+            res.status(400).send({
+                message: "Invalid fiscal code provided."
+            });
+            return;
+        }
+    }
+
+    /*if(req.body.vatNumber){
+        if(!formalChecker.checkVatNumber(req.body.vatNumber)){
+            res.status(400).send({
+                message: "Invalid VAT number provided."
+            });
+            return;
+        }
+    }
+
+    if(req.body.privateEMail){
+        if(!formalChecker.checkMailAddress(req.body.privateEMail)){
+            res.status(400).send({
+                message: "Invalid Private EMail address provided."
+            });
+            return;
+        }
+    }*/
+
+    if(req.body.companyEMail){
+        if(!formalChecker.checkMailAddress(req.body.companyEMail)){
+            res.status(400).send({
+                message: "Invalid Company EMail address provided."
+            });
+            return;
+        }
+    }
+
     // Create a Customer object
     const customer = {
         businessName: req.body.businessName,
@@ -38,6 +75,12 @@ exports.create = (req, res) => {
         fiscalCode: req.body.fiscalCode ? req.body.fiscalCode : null,
         vatNumber: req.body.vatNumber ? req.body.vatNumber : null,
         footNote: req.body.footNote ? req.body.footNote : null,
+        homePhoneNumber: req.body.homePhoneNumber ? req.body.homePhoneNumber : null,
+        officePhoneNumber: req.body.officePhoneNumber ? req.body.officePhoneNumber : null,
+        privateMobilePhoneNumber: req.body.privateMobilePhoneNumber ? req.body.privateMobilePhoneNumber : null,
+        companyMobilePhoneNumber: req.body.companyMobilePhoneNumber ? req.body.companyMobilePhoneNumber : null,
+        privateEMail: req.body.privateEMail ? req.body.privateEMail : null,
+        companyEMail: req.body.companyEMail ? req.body.companyEMail : null,
         lastEditedBy: req.session.userName,
         version: 1
     };

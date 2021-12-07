@@ -24,6 +24,24 @@ module.exports = (sequelize, Sequelize) => {
         headquartersCity: {
             type: Sequelize.STRING
         },
+        homePhoneNumber: {
+            type: Sequelize.STRING(50)
+        },
+        officePhoneNumber: {
+            type: Sequelize.STRING(50)
+        },
+        privateMobilePhoneNumber: {
+            type: Sequelize.STRING(50)
+        },
+        companyMobilePhoneNumber: {
+            type: Sequelize.STRING(50)
+        },
+        privateEMail: {
+            type: Sequelize.STRING(150)
+        },
+        companyEMail: {
+            type: Sequelize.STRING(150)
+        },
         fiscalCode: {
             type: Sequelize.STRING(16)
         },
@@ -52,7 +70,13 @@ module.exports = (sequelize, Sequelize) => {
                         'vatNumber',
                         'footNote',
                         'lastEditedBy',
-                        'version'
+                        'version',
+                        'homePhoneNumber',
+                        'officePhoneNumber',
+                        'privateMobilePhoneNumber',
+                        'companyMobilePhoneNumber',
+                        'privateEMail',
+                        'companyEMail'
                     ]
                 }
             },
@@ -71,7 +95,13 @@ module.exports = (sequelize, Sequelize) => {
                             'lastEditedBy',
                             'registeredOfficeAddress',
                             'registeredOfficeCity',
-                            'businessName'
+                            'businessName',
+                            'homePhoneNumber',
+                            'officePhoneNumber',
+                            'privateMobilePhoneNumber',
+                            'companyMobilePhoneNumber',
+                            'privateEMail',
+                            'companyEMail'
                         ]
                     }
                 }
