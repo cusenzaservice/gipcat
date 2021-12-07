@@ -19,11 +19,8 @@ const database = {
 	Sequelize: Sequelize,
 	sequelize: sequelize,
 	customers: require("./customer.model")(sequelize, Sequelize),
-	users: require("./user.model")(sequelize, Sequelize),
-	customerContacts: require("./customerContact.model")(sequelize, Sequelize)
+	users: require("./user.model")(sequelize, Sequelize)
 };
-
-database.customerContacts.belongsTo(database.customers, { foreignKey: 'idCustomer', targetKey: 'idCustomer' });
 
 database.users.findAndCountAll()
 	.then(data => {
