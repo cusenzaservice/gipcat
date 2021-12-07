@@ -13,7 +13,7 @@ services:
       - MYSQL_DATABASE=gipcat
       - MYSQL_USER=gipcat
     ports:
-      - 3306:3306
+      - 10.8.0.10:3306:3306
 
   backend:
     image: vittodevit/gipcat:live
@@ -25,4 +25,4 @@ services:
       - PASSWORD=gipcat
       - HOST=database
     ports:
-      - 8080:8080
+      - 10.8.0.10:8080:8080
