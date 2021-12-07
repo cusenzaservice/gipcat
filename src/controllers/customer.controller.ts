@@ -150,10 +150,11 @@ exports.update = (req, res) => {
     const id = req.params.id;
 
     // check if customer exists in DB
-    Customer.findByPk(id)
+    Customer.scope("verCheck").findByPk(id)
         .then(data => {
             if (data) {
                 // check if client-sent record version is the same as the server
+                console.log(req.body.version, data.version);
                 if (req.body.version == data.version) {
                     // increment record version
                     let buf = req.body;

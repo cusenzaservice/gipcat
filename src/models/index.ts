@@ -1,4 +1,5 @@
 import dbConfig from '../config/db.config'
+import config from '../config/general.config'
 const Sequelize = require("sequelize");
 
 const sequelize = new Sequelize(dbConfig.DB, dbConfig.USER, dbConfig.PASSWORD, {
@@ -22,6 +23,23 @@ const database = {
 	customerContacts: require("./customerContact.model")(sequelize, Sequelize)
 };
 
-database.customerContacts.belongsTo(database.customers, {foreignKey: 'idCustomer', targetKey: 'idCustomer'});
+database.customerContacts.belongsTo(database.customers, { foreignKey: 'idCustomer', targetKey: 'idCustomer' });
+
+database.users.findAndCountAll()
+	.then(data => {
+		if (data.count == 0) {
+			console.log("No users found, creating default user...");
+			database.users.create(config.defaultUser)
+				.then(data => {
+					console.log(`Created default user '${config.defaultUser.userName}' with password '${config.defaultUserPassword}'`);
+				})
+				.catch(err => {
+					console.error("ERR: Cannot create default user. You will not be able to login!")
+				});
+		}
+	})
+	.catch(err => {
+		console.error("ERR: Check failed for empty user table, you may not be able to login.");
+	});
 
 export = database;

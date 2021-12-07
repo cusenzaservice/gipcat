@@ -46,7 +46,6 @@ module.exports = (sequelize, Sequelize) => {
             defaultScope: {
                 attributes: {
                     exclude: [
-                        'idCustomer',
                         'headquartersAddress',
                         'headquartersCity',
                         'fiscalCode',
@@ -60,6 +59,21 @@ module.exports = (sequelize, Sequelize) => {
             scopes: {
                 extended: {
                     attributes: {}
+                },
+                verCheck: {
+                    attributes: {
+                        exclude: [
+                            'headquartersAddress',
+                            'headquartersCity',
+                            'fiscalCode',
+                            'vatNumber',
+                            'footNote',
+                            'lastEditedBy',
+                            'registeredOfficeAddress',
+                            'registeredOfficeCity',
+                            'businessName'
+                        ]
+                    }
                 }
             }
         });
