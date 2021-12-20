@@ -45,7 +45,7 @@ exports.create = (req, res) => {
             });
             return;
         }
-    }
+    }*/
 
     if(req.body.privateEMail){
         if(!formalChecker.checkMailAddress(req.body.privateEMail)){
@@ -54,7 +54,7 @@ exports.create = (req, res) => {
             });
             return;
         }
-    }*/
+    }
 
     if(req.body.companyEMail){
         if(!formalChecker.checkMailAddress(req.body.companyEMail)){

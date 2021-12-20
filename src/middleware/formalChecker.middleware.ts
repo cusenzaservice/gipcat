@@ -20,7 +20,6 @@ const checkVatNumber = (pi) => {
 }
 
 // https://gbresci.blogspot.com/2011/07/controllo-check-digit-codice-fiscale-in.html
-// TODO: FIX NOT WORKING
 const checkFiscalCode = (cf) => {
     let valid = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
     let set1 = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";

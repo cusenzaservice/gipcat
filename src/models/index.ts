@@ -19,6 +19,7 @@ const database = {
 	Sequelize: Sequelize,
 	sequelize: sequelize,
 	customers: require("./customer.model")(sequelize, Sequelize),
+	installations: require("./installation.model")(sequelize, Sequelize),
 	users: require("./user.model")(sequelize, Sequelize)
 };
 

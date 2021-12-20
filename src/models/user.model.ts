@@ -21,6 +21,7 @@ module.exports = (sequelize, Sequelize) => {
         1  | Customer
         2  | Technichan
         3  | HelpDesk
+        4  | Admin + HelpDesk
         */
         permissionType: {
             type: Sequelize.INTEGER,
