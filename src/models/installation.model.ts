@@ -18,7 +18,13 @@ module.exports = (sequelize, Sequelize) => {
             type: Sequelize.STRING,
             allowNull: false
         },
+        heaterBrand: {
+            type: Sequelize.STRING
+        },
         heater: {
+            type: Sequelize.STRING
+        },
+        heaterSerialNumber: {
             type: Sequelize.STRING
         },
         installationType: {
