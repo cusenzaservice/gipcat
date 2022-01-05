@@ -31,6 +31,9 @@ module.exports = (sequelize, Sequelize) => {
         idCustomer: {
             type: Sequelize.INTEGER
         },
+        color: {
+            type: Sequelize.STRING(20)
+        },
         lastEditedBy: {
             type: Sequelize.STRING
         },
