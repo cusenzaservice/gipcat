@@ -32,6 +32,12 @@ module.exports = (sequelize, Sequelize) => {
             allowNull: false
         },
 
+        // duration in minutes for calendar collisions
+        interventionDuration: {
+            type: Sequelize.INTEGER,
+            allowNull: false
+        },
+
         // technichan username which the intervention is assigned to
         assignedTo: {
             type: Sequelize.STRING
@@ -64,6 +70,12 @@ module.exports = (sequelize, Sequelize) => {
         },
         footNote: {
             type: Sequelize.TEXT
+        },
+        associatedCallNote: {
+            type: Sequelize.TEXT
+        },
+        associatedCallPosticipationDate: {
+            type: Sequelize.DATE
         },
         lastEditedBy: {
             type: Sequelize.STRING
